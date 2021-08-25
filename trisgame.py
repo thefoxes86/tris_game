@@ -1,12 +1,16 @@
 import numpy as np
 import pandas as pd
 
-from utils.place_sign import place_sign_2_players
+from utils.deleting_from_array import deleting_from_array
 from utils.place_sign import place_sign_1_player
+from utils.place_sign import place_sign_2_players
 
 table_tris = np.array(
     [["-", "-", "-"], ["-", "-", "-"], ["-", "-", "-"]]
 )
+possible_move_player = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+possible_move_computer = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+last_move_player = np.array([])
 columns_table = ["Col 1", "Col 2", "Col 3"]
 index_table = ["Row 1", "Row 2", "Row 3"]
 dataset = pd.DataFrame(data=table_tris, columns=columns_table)
@@ -22,7 +26,17 @@ n = 10
 if num_player == '1':
     while i < n:
         sign = input("Giocatore 1: ")
-        result = place_sign_1_player(table_tris, sign)
+        if (i == 1):
+            possible_new_move_player = deleting_from_array(possible_move_player, sign)
+            possible_new_move_computer = deleting_from_array(possible_move_player, sign)
+        else:
+            possible_new_move_player = deleting_from_array(possible_new_move_player, sign)
+            possible_new_move_computer = deleting_from_array(possible_new_move_player, sign)
+
+        last_move_player = np.append(last_move_player, sign)
+
+        result = place_sign_1_player(table_tris, sign, possible_new_move_player, possible_new_move_computer,
+                                     last_move_player)
         if result == 1:
             print('Vittoria Giocatore 1')
             print(table_tris)
